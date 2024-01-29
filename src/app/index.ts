@@ -1,22 +1,27 @@
 import { ApolloServer } from "@apollo/server";
 import express from "express";
 import {expressMiddleware} from "@apollo/server/express4";
-import bodyParser, { json } from "body-parser";
+import bodyParser from "body-parser";
+import { prismaClient } from "./clients/db";
+import { User } from "./user";
 
 export async function initServer(){
     const app = express()
 
     app.use(bodyParser.json());
 
+
     const graphqlServer = new ApolloServer({
         typeDefs:`
+            ${User.types}
+            
             type Query{
-                message: String
+                ${User.queries}
             }
         `,
         resolvers:{
             Query:{
-                message: ()=> "Hello There"
+                ...User.resolvers.queries
             }
         },  
     })
