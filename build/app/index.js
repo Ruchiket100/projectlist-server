@@ -29,9 +29,13 @@ function initServer() {
             type Query{
                 ${user_1.User.queries}
             }
+            type Mutation{
+                ${user_1.User.mutations}
+            }
         `,
             resolvers: {
-                Query: Object.assign({}, user_1.User.resolvers.queries)
+                Query: Object.assign({}, user_1.User.resolvers.queries),
+                Mutation: Object.assign({}, user_1.User.resolvers.mutations)
             },
         });
         yield graphqlServer.start();
