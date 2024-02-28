@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import JWT from 'jsonwebtoken'
 
-const SecretKey = process.env.Secret_Key || "$secret@12u94u3#"
+const SecretKey = process.env.Secret_Key
 
 class JWTservice {
     public static generateUserToken(user:User){
@@ -9,9 +9,10 @@ class JWTservice {
             id:user.id,
             email:user.email
         }
-
-        const token = JWT.sign(payload, SecretKey)
-        return token;
+        if(SecretKey)
+        {const token = JWT.sign(payload, SecretKey, {expiresIn: '3650d'})
+        return token;}
+        return {error:{message: "no secret key"}}
     }
 }
 
