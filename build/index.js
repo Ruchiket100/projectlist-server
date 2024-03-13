@@ -13,7 +13,7 @@ const index_1 = require("./app/index");
 function init() {
     return __awaiter(this, void 0, void 0, function* () {
         const app = yield (0, index_1.initServer)();
-        app.listen(8000, () => `Server started at localhost:8000`);
+        app.listen(8000, () => console.log(`Server started at localhost:8000 🚀`));
     });
 }
 init();

@@ -4,15 +4,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const SecretKey = process.env.Secret_Key || "$secret@12u94u3#";
+const SecretKey = process.env.Secret_Key;
 class JWTservice {
     static generateUserToken(user) {
         const payload = {
             id: user.id,
             email: user.email
         };
-        const token = jsonwebtoken_1.default.sign(payload, SecretKey);
-        return token;
+        if (SecretKey) {
+            const token = jsonwebtoken_1.default.sign(payload, SecretKey, { expiresIn: '3650d' });
+            return token;
+        }
+        return { error: { message: "no secret key" } };
+    }
+    static verifyToken(token) {
+        if (SecretKey) {
+            return jsonwebtoken_1.default.verify(token, SecretKey);
+        }
+        return { error: { message: "Failed to Authorized Token" } };
     }
 }
 exports.default = JWTservice;

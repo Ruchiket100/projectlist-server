@@ -9,4 +9,10 @@ exports.types = `#graphql
         email: String!
         profileImageUrl: String
     }
+
+    type AuthPayload {
+        token: String
+        success: Boolean!
+        message: String
+    }
 `;
