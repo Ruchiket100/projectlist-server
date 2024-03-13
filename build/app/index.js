@@ -17,24 +17,41 @@ const server_1 = require("@apollo/server");
 const express_1 = __importDefault(require("express"));
 const express4_1 = require("@apollo/server/express4");
 const body_parser_1 = __importDefault(require("body-parser"));
+const user_1 = require("./user");
+const projects_1 = require("./projects");
+const jwt_1 = __importDefault(require("../services/jwt"));
 function initServer() {
     return __awaiter(this, void 0, void 0, function* () {
         const app = (0, express_1.default)();
         app.use(body_parser_1.default.json());
         const graphqlServer = new server_1.ApolloServer({
             typeDefs: `
+            ${user_1.User.types}
+            ${projects_1.Projects.types}
             type Query{
-                message: String
+                ${user_1.User.queries}
+                ${projects_1.Projects.queries}
+            }
+            type Mutation{
+                ${user_1.User.mutations}
+                ${projects_1.Projects.mutations}
             }
         `,
-            resolvers: {
-                Query: {
-                    message: () => "Hello There"
-                }
-            },
+            resolvers: Object.assign({ Query: Object.assign(Object.assign({}, user_1.User.resolvers.queries), projects_1.Projects.resolvers.queries), Mutation: Object.assign(Object.assign({}, user_1.User.resolvers.mutations), projects_1.Projects.resolvers.mutations) }, projects_1.Projects.resolvers.extraResolvers),
         });
         yield graphqlServer.start();
-        app.use("/graphql", (0, express4_1.expressMiddleware)(graphqlServer));
+        app.use("/graphql", (0, express4_1.expressMiddleware)(graphqlServer, {
+            context: ({ req }) => __awaiter(this, void 0, void 0, function* () {
+                const token = req.headers["authorization"];
+                try {
+                    const user = jwt_1.default.verifyToken(token);
+                    return { user };
+                }
+                catch (error) {
+                    return {};
+                }
+            })
+        }));
         return app;
     });
 }
