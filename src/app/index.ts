@@ -4,7 +4,6 @@ import { expressMiddleware } from "@apollo/server/express4";
 import bodyParser from "body-parser";
 import { User } from "./user";
 import { Projects } from "./projects"
-import { Request, Response, NextFunction } from 'express';
 import JWTservice from "../services/jwt";
 
 export async function initServer() {

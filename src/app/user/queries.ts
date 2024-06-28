@@ -1,3 +1,3 @@
 export const queries = `#graphql
-    sayHello(name: String!): String
+    sayHello(name: String): String
 `

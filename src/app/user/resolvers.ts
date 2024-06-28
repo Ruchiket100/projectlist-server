@@ -1,21 +1,30 @@
-import axios from "axios";
+
 import { prismaClient } from "../clients/db";
 import JWTservice from "../../services/jwt";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 
 const queries = {
-    async sayHello(name: string) { return `Hello, ${name}!` },
+    async sayHello(name: string) {
+        console.log(name);
+        const data = await `Hello, ${name}!`
+        return data;
+    },
 }
+
+//changes here
 const mutations = {
     async signup(_parent: any, { name, email, password }: { name: string, email: string, password: string }) {
+        if (!email) return console.log(email)
         // check is the email is unique
         const isExist = await prismaClient.user.findUnique({
             where: { email: email }
         })
+        console.log(isExist)
         //if not give me error and return error message
         if (isExist) {
             return {
+
                 success: false,
                 message: "user already exists"
             }
